@@ -34,6 +34,8 @@ contract Veen is ERC20Token {
     function Veen() public {
         _tokenSupply = 15000000000;
         _owner = msg.sender;
+
+        _balances[_owner] = _tokenSupply;
     }
 
     function totalSupply() public constant returns (uint) {
