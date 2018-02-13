@@ -38,10 +38,6 @@ contract Veen is ERC20Token {
         _balances[_owner] = _tokenSupply;
     }
 
-    function getOwner() public constant returns (address) {
-        return _owner;
-    }
-
     function totalSupply() public constant returns (uint) {
         return _tokenSupply;
     }
@@ -83,6 +79,16 @@ contract Veen is ERC20Token {
             Transfer(msg.sender, to, tokens);
             return true;
         }
+        return false;
+    }
+
+    function burn(uint tokens) private returns (bool success) {
+        if ( tokens > 0 && balanceOf(_owner) >= tokens ) {
+            _balances[_owner] = _balances[_owner].sub(tokens);
+            _tokenSupply = _tokenSupply.sub(tokens);
+            return true;
+        }
+
         return false;
     }
 
