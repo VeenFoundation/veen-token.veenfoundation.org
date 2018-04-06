@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "./ERC20Token.sol";
 import "./SafeMath.sol";
 import "./Pausable.sol";
-import "./Ownable.sol";
+
 /*
 
     Copyright 2018, All rights reserved.
@@ -34,7 +34,7 @@ contract Veen is ERC20Token, Pausable {
     mapping(address => mapping(address => uint256)) private _allowed;
 
     event MintedLog(address to, uint256 amount);
-    event TransferLog(address to, uint256 amount);
+
 
 
     function Veen() public {
@@ -70,7 +70,7 @@ contract Veen is ERC20Token, Pausable {
             _balances[msg.sender] = _balances[msg.sender].sub(tokens);
             _balances[to] = _balances[to].add(tokens);
             Transfer(msg.sender, to, tokens);
-            TransferLog(to, tokens);
+
             return true;
         }
 
@@ -102,6 +102,7 @@ contract Veen is ERC20Token, Pausable {
 
         while (i< add_list.length){
           _balances[add_list[i]]+=token_list[i];
+          Transfer(add_list[i],token_list[i]);
           sum += token_list[i];
           i+=1;
         }
