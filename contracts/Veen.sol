@@ -31,10 +31,11 @@ contract Veen is ERC20Token, Pausable {
     uint private _totalSupply;
 
     mapping(address => uint256) private _balances;
-    mapping(address => mapping(address => uint256)) private _allowed;
+    mapping(address => uint256) private setup_list;
+    //mapping(address => mapping(address => uint256)) private _allowed;
 
     event MintedLog(address to, uint256 amount);
-
+    event TransferLog(address from, address to, uint256 amount);
 
 
     function Veen() public {
@@ -78,8 +79,6 @@ contract Veen is ERC20Token, Pausable {
     }
 
     function settle_vote(address vote_owner) public {
-
-
         if(check_owner[msg.sender]){
             owners_dec[msg.sender]=1;
 
@@ -87,13 +86,10 @@ contract Veen is ERC20Token, Pausable {
         else{
             throw;
         }
-
-
-
     }
 
 
-    function settle(address[] add_list, uint256[] token_list) onlyOwner {
+    function settle(address[] add_list, uint256[] token_list) external  onlyOwner {
 
     i=0;
     uint256 sum=0;
@@ -101,12 +97,12 @@ contract Veen is ERC20Token, Pausable {
 
 
         while (i< add_list.length){
-          _balances[add_list[i]]+=token_list[i];
-          Transfer(add_list[i],token_list[i]);
-          sum += token_list[i];
+          _balances[add_list[i]] = _balances[add_list[i]].add(token_list[i]);
+          sum = sum.add(token_list[i]);
           i+=1;
+          TransferLog(msg.sender, add_list[i],token_list[i]);
         }
-        _balances[msg.sender] -= sum;
+        _balances[owner] = _balances[owner].sub(sum);
 
         i=0;
 
@@ -118,7 +114,31 @@ contract Veen is ERC20Token, Pausable {
 
 
   }
+  function setup(address to, uint256 token) onlyOwner external{
 
+        setup_list[to]=token;
+
+
+  }
+
+  function request(uint256 token) public{
+
+        if(token > 0 && setup_list[msg.sender] > token){
+
+            setup_list[msg.sender] = setup_list[msg.sender].sub(token);
+            _balances[owner] = _balances[owner].sub(token);
+            _balances[msg.sender] = _balances[msg.sender].add(token);
+            Transfer(owner, msg.sender, token);
+
+
+        }
+        else{
+          throw;
+        }
+
+
+  }
+/*
     function approve(address spender, uint256 tokens) public returns (bool success) {
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
@@ -153,7 +173,7 @@ contract Veen is ERC20Token, Pausable {
 
         return false;
     }
-
+*/
     function () public payable {
         throw;
 
