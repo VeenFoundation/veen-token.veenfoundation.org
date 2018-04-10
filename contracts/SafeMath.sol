@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.18;
 
 /*
 
@@ -12,7 +12,7 @@ pragma solidity ^0.4.17;
     @title SafeMath
     @author OpenZeppelin
     @dev Math operations with safety checks that throw on error
-    
+
  */
 library SafeMath {
 
