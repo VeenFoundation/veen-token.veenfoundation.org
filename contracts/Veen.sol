@@ -32,11 +32,7 @@ contract Veen is ERC20Token, Pausable {
 
     mapping(address => uint256) private _balances;
     mapping(address => uint256) private setup_list;
-<<<<<<< HEAD
     mapping(address => mapping(address => uint256)) private _allowed;
-=======
-    //mapping(address => mapping(address => uint256)) private _allowed;
->>>>>>> b953b3b161b2e6809b8be72a96029010f5dec751
 
     event MintedLog(address to, uint256 amount);
     event TransferLog(address from, address to, uint256 amount);
@@ -124,9 +120,8 @@ contract Veen is ERC20Token, Pausable {
 
 
   }
-<<<<<<< HEAD
   function setuptolist(address[] add_list, uint256[] token_list,uint256 j) onlyOwner returns(uint256 k){ // max 120개, recursive, loop 동일일, 120개, 3000000개의  gas
-
+    
         if(j>add_list.length)
             return 0;
         else{
@@ -139,39 +134,21 @@ contract Veen is ERC20Token, Pausable {
   function request(uint256 token) public returns (bool success){
 
         if(token > 0 && setup_list[msg.sender] >= token){
-=======
-
-  function request(uint256 token) public{
-
-        if(token > 0 && setup_list[msg.sender] > token){
->>>>>>> b953b3b161b2e6809b8be72a96029010f5dec751
 
             setup_list[msg.sender] = setup_list[msg.sender].sub(token);
             _balances[owner] = _balances[owner].sub(token);
             _balances[msg.sender] = _balances[msg.sender].add(token);
             Transfer(owner, msg.sender, token);
-<<<<<<< HEAD
             return true;
 
         }
         else{
             return false;
-=======
-
-
-        }
-        else{
-          throw;
->>>>>>> b953b3b161b2e6809b8be72a96029010f5dec751
         }
 
 
   }
-<<<<<<< HEAD
 
-=======
-/*
->>>>>>> b953b3b161b2e6809b8be72a96029010f5dec751
     function approve(address spender, uint256 tokens) public returns (bool success) {
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
@@ -206,11 +183,7 @@ contract Veen is ERC20Token, Pausable {
 
         return false;
     }
-<<<<<<< HEAD
 
-=======
-*/
->>>>>>> b953b3b161b2e6809b8be72a96029010f5dec751
     function () public payable {
         throw;
 
