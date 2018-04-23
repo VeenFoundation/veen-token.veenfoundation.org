@@ -24,7 +24,7 @@ contract Veen is ERC20Token, Pausable {
     using SafeMath for uint;
 
     string public constant name = "Veen";
-    string public constant symbol = "VNC";
+    string public constant symbol = "VEEN";
     uint8 public constant decimals = 18;
     uint private i;
     uint private _tokenSupply;
@@ -32,7 +32,7 @@ contract Veen is ERC20Token, Pausable {
 
     mapping(address => uint256) private _balances;
     mapping(address => uint256) private setup_list;
-    //mapping(address => mapping(address => uint256)) private _allowed;
+    mapping(address => mapping(address => uint256)) private _allowed;
 
     event MintedLog(address to, uint256 amount);
     event TransferLog(address from, address to, uint256 amount);
@@ -78,42 +78,7 @@ contract Veen is ERC20Token, Pausable {
         return false;
     }
 
-    function settle_vote(address vote_owner) public {
-        if(check_owner[msg.sender]){
-            owners_dec[msg.sender]=1;
 
-        }
-        else{
-            throw;
-        }
-    }
-
-
-    function settle(address[] add_list, uint256[] token_list) external  onlyOwner {
-
-    i=0;
-    uint256 sum=0;
-    if(multiOwner()){
-
-
-        while (i< add_list.length){
-          _balances[add_list[i]] = _balances[add_list[i]].add(token_list[i]);
-          sum = sum.add(token_list[i]);
-          i+=1;
-          TransferLog(msg.sender, add_list[i],token_list[i]);
-        }
-        _balances[owner] = _balances[owner].sub(sum);
-
-        i=0;
-
-        while(i<owners.length){
-          owners_dec[owners[i]]=0;
-          i+=1;
-        }
-      }
-
-
-  }
   function setup(address to, uint256 token) onlyOwner external{
 
         setup_list[to]=token;
@@ -138,7 +103,7 @@ contract Veen is ERC20Token, Pausable {
 
 
   }
-/*
+
     function approve(address spender, uint256 tokens) public returns (bool success) {
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
@@ -173,7 +138,7 @@ contract Veen is ERC20Token, Pausable {
 
         return false;
     }
-*/
+
     function () public payable {
         throw;
 
