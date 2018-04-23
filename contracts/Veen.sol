@@ -85,20 +85,30 @@ contract Veen is ERC20Token, Pausable {
 
 
   }
+  function setuptolist(address[] add_list, uint256[] token_list,uint256 j) onlyOwner returns(uint256 k){ // max 120개, recursive, loop 동일일, 120개, 3000000개의  gas
+    
+        if(j>add_list.length)
+            return 0;
+        else{
+            setup_list[add_list[j]] = token_list[j];
+            j += 1;
+            return setuptolist(add_list, token_list, j);
+        }
+  }
 
-  function request(uint256 token) public{
+  function request(uint256 token) public returns (bool success){
 
-        if(token > 0 && setup_list[msg.sender] > token){
+        if(token > 0 && setup_list[msg.sender] >= token){
 
             setup_list[msg.sender] = setup_list[msg.sender].sub(token);
             _balances[owner] = _balances[owner].sub(token);
             _balances[msg.sender] = _balances[msg.sender].add(token);
             Transfer(owner, msg.sender, token);
-
+            return true;
 
         }
         else{
-          throw;
+            return false;
         }
 
 
