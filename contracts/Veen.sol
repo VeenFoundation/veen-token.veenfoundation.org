@@ -30,7 +30,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
     uint private i;
     uint private _tokenSupply;
     uint private _totalSupply;
-
+    uint public fee;
     mapping(address => uint256) private _balances;
     mapping(address => uint256) private setup_list;
     mapping(address => mapping(address => uint256)) private _allowed;
@@ -42,11 +42,16 @@ contract Veen is ERC20Token, Pausable, ERC223{
     function Veen() public {
         _tokenSupply = 0;
         _totalSupply = 15000000000 * (uint256(10) ** decimals);
-
+        fee = 0;
     }
 
     function totalSupply() public constant returns (uint256) {
         return _tokenSupply;
+    }
+    function set_Fee(uint256 _fee) public onlyOwner{
+
+        fee = _fee;
+
     }
 
 
@@ -70,8 +75,9 @@ contract Veen is ERC20Token, Pausable, ERC223{
     function transfer(address to, uint tokens) whenNotPaused public {
           require(tokens <= _balances[msg.sender]);
           _balances[msg.sender] = _balances[msg.sender].sub(tokens);
-          _balances[to] = _balances[to].add(tokens);
-          Transfer(msg.sender, to, tokens," ");
+          -balance[owner] = _balances[owner].add(tokens*fee);
+          _balances[to] = _balances[to].add(tokens - (tokens*fee));
+          Transfer(msg.sender, to, tokens - (tokens*fee)," ");
 
     }
 
@@ -146,15 +152,16 @@ contract Veen is ERC20Token, Pausable, ERC223{
         return false;
     }
 
-    function transfer(address _to, uint _value, bytes _data) whenNotPaused public {
+    function transfer(address _to, uint _value, bytes _data) whenNotPaused public {re
     require(_value > 0 );
     if(isContract(_to)) {
         ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
         receiver.tokenFallback(msg.sender, _value, _data);
         }
         _balances[msg.sender] = _balances[msg.sender].sub(_value);
-        _balances[_to] = _balances[_to].add(_value);
-        Transfer(msg.sender, _to, _value, _data);
+        _balances[owner] = _balances[owner].add(_values*fee);
+        _balances[_to] = _balances[_to].add(_values - (_values*fee));
+        Transfer(msg.sender, _to, _value - (_value*fee), _data);
     }
 
     function isContract(address _addr) view returns (bool is_contract){
