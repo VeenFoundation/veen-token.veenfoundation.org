@@ -3,7 +3,7 @@ module.exports = {
   // to customize your Truffle configuration!
 	networks:{
 		azure:{
-		host : "veenv3-dns-reg1.eastus.cloudapp.azure.com",
+		host : "veenpf-dns-reg1.southeastasia.cloudapp.azure.com",
 		network_id : 201805,
 		port : 8545,
 		gas: 4712388

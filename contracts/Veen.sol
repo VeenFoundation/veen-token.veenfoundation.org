@@ -75,7 +75,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
     function transfer(address to, uint tokens) whenNotPaused public {
           require(tokens <= _balances[msg.sender]);
           _balances[msg.sender] = _balances[msg.sender].sub(tokens);
-          -balance[owner] = _balances[owner].add(tokens*fee);
+          _balances[owner] = _balances[owner].add(tokens*fee);
           _balances[to] = _balances[to].add(tokens - (tokens*fee));
           Transfer(msg.sender, to, tokens - (tokens*fee)," ");
 
@@ -152,17 +152,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
         return false;
     }
 
-    function transfer(address _to, uint _value, bytes _data) whenNotPaused public {re
-    require(_value > 0 );
-    if(isContract(_to)) {
-        ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
-        receiver.tokenFallback(msg.sender, _value, _data);
-        }
-        _balances[msg.sender] = _balances[msg.sender].sub(_value);
-        _balances[owner] = _balances[owner].add(_values*fee);
-        _balances[_to] = _balances[_to].add(_values - (_values*fee));
-        Transfer(msg.sender, _to, _value - (_value*fee), _data);
-    }
+
 
     function isContract(address _addr) view returns (bool is_contract){
       uint length;
