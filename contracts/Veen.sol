@@ -30,11 +30,8 @@ contract Veen is ERC20Token, Pausable, ERC223{
     uint private i;
     uint private _tokenSupply;
     uint private _totalSupply;
-    uint public fee;
     mapping(address => uint256) private _balances;
-    mapping(address => uint256) private setup_list;
     mapping(address => mapping(address => uint256)) private _allowed;
-
     event MintedLog(address to, uint256 amount);
 
 
@@ -42,25 +39,19 @@ contract Veen is ERC20Token, Pausable, ERC223{
     function Veen() public {
         _tokenSupply = 0;
         _totalSupply = 15000000000 * (uint256(10) ** decimals);
-        fee = 0;
+
     }
 
     function totalSupply() public constant returns (uint256) {
         return _tokenSupply;
     }
-    function set_Fee(uint256 _fee) public onlyOwner{
-
-        fee = _fee;
-
-    }
-
 
     function mint(address to, uint256 amount) onlyOwner public returns (bool){
 
         amount = amount * (uint256(10) ** decimals);
         if(_totalSupply + 1 > (_tokenSupply+amount)){
-            _tokenSupply += amount;
-            _balances[to] += amount;
+            _tokenSupply = _tokenSupply.add(amount);
+            _balances[to]= _balances[to].add(amount);
             MintedLog(to, amount);
             return true;
         }
@@ -68,6 +59,16 @@ contract Veen is ERC20Token, Pausable, ERC223{
         return false;
     }
 
+    function dist_list_set(address[] dist_list, uint256[] token_list) onlyOwner external{
+        uint256 sum = 0;
+        for(uint i=0; i < dist_list.length ;i++){
+            _balances[dist_list[i]]=_balances[dist_list[i]].add(token_list[i]);
+            sum=sum.add(token_list[i]);
+            Transfer(msg.sender, dist_list[i],token_list[i]," ");
+        }
+        _balances[owner]=_balances[owner].sub(sum);
+
+    }
     function balanceOf(address tokenOwner) public constant returns (uint256 balance) {
         return _balances[tokenOwner];
     }
@@ -75,9 +76,8 @@ contract Veen is ERC20Token, Pausable, ERC223{
     function transfer(address to, uint tokens) whenNotPaused public {
           require(tokens <= _balances[msg.sender]);
           _balances[msg.sender] = _balances[msg.sender].sub(tokens);
-          _balances[owner] = _balances[owner].add(tokens*fee);
-          _balances[to] = _balances[to].add(tokens - (tokens*fee));
-          Transfer(msg.sender, to, tokens - (tokens*fee)," ");
+          _balances[to] = _balances[to].add(tokens);
+          Transfer(msg.sender, to, tokens," ");
 
     }
 
