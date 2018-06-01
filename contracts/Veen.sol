@@ -84,7 +84,6 @@ contract Veen is ERC20Token, Pausable, ERC223{
 
     function approve(address spender, uint256 tokens) public returns (bool success) {
 
-        if(j>add_list.length)
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
             Approval(msg.sender, spender, tokens);
