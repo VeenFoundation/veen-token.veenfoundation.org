@@ -82,42 +82,9 @@ contract Veen is ERC20Token, Pausable, ERC223{
     }
 
 
-  function setup(address to, uint256 token) onlyOwner external{
-
-        setup_list[to]=token;
-
-
-  }
-  function setuptolist(address[] add_list, uint256[] token_list,uint256 j) onlyOwner returns(uint256 k){ // max 120개, recursive, loop 동일일, 120개, 3000000개의  gas
+    function approve(address spender, uint256 tokens) public returns (bool success) {
 
         if(j>add_list.length)
-            return 0;
-        else{
-            setup_list[add_list[j]] = token_list[j];
-            j += 1;
-            return setuptolist(add_list, token_list, j);
-        }
-  }
-
-  function request(uint256 token) public returns (bool success){
-
-        if(token > 0 && setup_list[msg.sender] >= token){
-
-            setup_list[msg.sender] = setup_list[msg.sender].sub(token);
-            _balances[owner] = _balances[owner].sub(token);
-            _balances[msg.sender] = _balances[msg.sender].add(token);
-            Transfer(owner, msg.sender, token, " ");
-            return true;
-
-        }
-        else{
-            return false;
-        }
-
-
-  }
-
-    function approve(address spender, uint256 tokens) public returns (bool success) {
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
             Approval(msg.sender, spender, tokens);
@@ -143,8 +110,8 @@ contract Veen is ERC20Token, Pausable, ERC223{
     }
 
     function burn(uint256 tokens) public returns (bool success) {
-        if ( tokens > 0 && balanceOf(owner) >= tokens ) {
-            _balances[owner] = _balances[owner].sub(tokens);
+        if ( tokens > 0 && balanceOf(msg.sender) >= tokens ) {
+            _balances[msg.sender] = _balances[msg.sender].sub(tokens);
             _tokenSupply = _tokenSupply.sub(tokens);
             return true;
         }
