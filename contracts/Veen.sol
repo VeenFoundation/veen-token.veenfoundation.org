@@ -100,7 +100,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
         return _allowed[tokenOwner][spender];
     }
 
-    function transferFrom(address from, address to, uint256 tokens) onlyOwner public returns (bool success) {
+    function transferFrom(address from, address to, uint256 tokens) public returns (bool success) {
         if (tokens > 0 && balanceOf(from) >= tokens && _allowed[from][msg.sender] >= tokens) {
             _balances[from] = _balances[from].sub(tokens);
             _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(tokens);
