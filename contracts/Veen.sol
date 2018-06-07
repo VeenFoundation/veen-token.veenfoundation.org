@@ -4,7 +4,6 @@ import "./ERC20Token.sol";
 import "./SafeMath.sol";
 import "./Pausable.sol";
 import "./ERC223.sol";
-import "./ERC223ReceivingContract.sol";
 import "./Receiver_Interface.sol";
 
 /*
@@ -28,7 +27,6 @@ contract Veen is ERC20Token, Pausable, ERC223{
     string public constant name = "Veen";
     string public constant symbol = "VEEN";
     uint8 public constant decimals = 18;
-    uint private i;
     uint private _tokenSupply;
     uint private _totalSupply;
     mapping(address => uint256) private _balances;
