@@ -5,6 +5,7 @@ import "./SafeMath.sol";
 import "./Pausable.sol";
 import "./ERC223.sol";
 import "./ERC223ReceivingContract.sol";
+import "./Receiver_Interface.sol";
 
 /*
     Copyright 2018, All rights reserved.
@@ -73,12 +74,14 @@ contract Veen is ERC20Token, Pausable, ERC223{
         return _balances[tokenOwner];
     }
 
-    function transfer(address to, uint tokens) whenNotPaused public {
-          require(tokens <= _balances[msg.sender]);
-          _balances[msg.sender] = _balances[msg.sender].sub(tokens);
-          _balances[to] = _balances[to].add(tokens);
-          Transfer(msg.sender, to, tokens," ");
-
+    function transfer(address to, uint tokens) whenNotPaused public returns(bool success){
+    bytes memory empty;
+    	if(isContract(to)) {
+        	return transferToContract(to, tokens, empty);
+    	}
+    	else {
+        	return transferToAddress(to, tokens, empty);
+    	}
     }
 
 
@@ -117,6 +120,24 @@ contract Veen is ERC20Token, Pausable, ERC223{
 
         return false;
     }
+  function transferToAddress(address _to, uint _value, bytes _data) private returns (bool success) {
+    if (balanceOf(msg.sender) < _value) revert();
+    _balances[msg.sender] = balanceOf(msg.sender).sub(_value);
+    _balances[_to] = balanceOf(_to).add(_value);
+    emit Transfer(msg.sender, _to, _value, _data);
+    return true;
+  }
+  
+  //function that is called when transaction target is a contract
+  function transferToContract(address _to, uint _value, bytes _data) private returns (bool success) {
+    if (balanceOf(msg.sender) < _value) revert();
+    _balances[msg.sender] = balanceOf(msg.sender).sub(_value);
+    _balances[_to] = balanceOf(_to).add(_value);
+    ContractReceiver receiver = ContractReceiver(_to);
+    receiver.tokenFallback(msg.sender, _value, _data);
+    emit Transfer(msg.sender, _to, _value, _data);
+    return true;
+}
 
 
 
