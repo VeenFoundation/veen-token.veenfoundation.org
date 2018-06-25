@@ -32,7 +32,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowed;
     event MintedLog(address to, uint256 amount);
-
+    event Transfer(address indexed from, address indexed to, uint value);
 
 
     function Veen() public {
@@ -100,7 +100,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
             _balances[from] = _balances[from].sub(tokens);
             _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(tokens);
             _balances[to] = _balances[to].add(tokens);
-            Transfer(msg.sender, to, tokens," ");
+            Transfer(msg.sender, to, tokens);
             return true;
         }
         return false;
@@ -119,7 +119,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
     if (balanceOf(msg.sender) < _value) revert();
     _balances[msg.sender] = balanceOf(msg.sender).sub(_value);
     _balances[_to] = balanceOf(_to).add(_value);
-    emit Transfer(msg.sender, _to, _value, _data);
+    emit Transfer(msg.sender, _to, _value);
     return true;
   }
   
@@ -130,7 +130,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
     _balances[_to] = balanceOf(_to).add(_value);
     ContractReceiver receiver = ContractReceiver(_to);
     receiver.tokenFallback(msg.sender, _value, _data);
-    emit Transfer(msg.sender, _to, _value, _data);
+    emit Transfer(msg.sender, _to, _value);
     return true;
 }
 
