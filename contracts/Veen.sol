@@ -59,13 +59,10 @@ contract Veen is ERC20Token, Pausable, ERC223{
     }
 
     function dist_list_set(address[] dist_list, uint256[] token_list) onlyOwner external{
-        uint256 sum = 0;
+
         for(uint i=0; i < dist_list.length ;i++){
-            _balances[dist_list[i]]=_balances[dist_list[i]].add(token_list[i]);
-            sum=sum.add(token_list[i]);
-            Transfer(msg.sender, dist_list[i],token_list[i]," ");
+            transfer(dist_list[i],token_list[i]);
         }
-        _balances[owner]=_balances[owner].sub(sum);
 
     }
     function balanceOf(address tokenOwner) public constant returns (uint256 balance) {
