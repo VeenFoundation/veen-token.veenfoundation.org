@@ -51,7 +51,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
         if(_totalSupply + 1 > (_tokenSupply+amount)){
             _tokenSupply = _tokenSupply.add(amount);
             _balances[to]= _balances[to].add(amount);
-            MintedLog(to, amount);
+            emit MintedLog(to, amount);
             return true;
         }
 
@@ -84,7 +84,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
 
         if (tokens > 0 && balanceOf(msg.sender) >= tokens) {
             _allowed[msg.sender][spender] = tokens;
-            Approval(msg.sender, spender, tokens);
+            emit Approval(msg.sender, spender, tokens);
             return true;
         }
 
@@ -100,7 +100,7 @@ contract Veen is ERC20Token, Pausable, ERC223{
             _balances[from] = _balances[from].sub(tokens);
             _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(tokens);
             _balances[to] = _balances[to].add(tokens);
-            Transfer(msg.sender, to, tokens);
+            emit Transfer(msg.sender, to, tokens);
             return true;
         }
         return false;
@@ -149,3 +149,4 @@ contract Veen is ERC20Token, Pausable, ERC223{
 
     }
 }
+
