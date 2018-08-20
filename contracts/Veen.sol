@@ -394,3 +394,4 @@ contract Veen is ERC20Token, Pausable, ERC223{
 
     }
 }
+
